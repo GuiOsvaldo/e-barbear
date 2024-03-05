@@ -1,0 +1,32 @@
+1 - Primeiro, você precisa se inscrever no Twilio e obter suas credenciais (SID, token e número de telefone Twilio).
+
+2 -  /* Instalar o twilio com o seguinte comando (composer require twilio/sdk) */
+
+3 - Agora, você pode usar o seguinte código em seu controlador Laravel para enviar uma mensagem de confirmação:
+
+
+use Twilio\Rest\Client;
+
+// Sua lógica para gerar o código de confirmação
+$codigoConfirmacao = mt_rand(1000, 9999);
+
+$sid = 'SEU_SID_DO_TWILIO';
+$token = 'SEU_TOKEN_DO_TWILIO';
+$twilio = new Client($sid, $token);
+
+$numeroDestinatario = '+155 586 753 09'; // Número para onde enviar a mensagem
+$mensagem = "Seu código de confirmação é: $codigoConfirmacao";
+
+$mensagemEnviada = $twilio->messages
+                        ->create($numeroDestinatario, [
+                            'from' => 'SEU_NUMERO_TWILIO',
+                            'body' => $mensagem
+                        ]);
+
+if ($mensagemEnviada) {
+    // Mensagem enviada com sucesso
+    return "Mensagem de confirmação enviada com sucesso para $numeroDestinatario.";
+} else {
+    // Tratar erro no envio da mensagem
+    return "Houve um erro ao enviar a mensagem de confirmação.";
+}
